@@ -46,7 +46,7 @@ jobs:
         run: |
           perl -E 'say "Is STDOUT a TTY?: ", -t STDOUT ? "yes" : "no"'
           docker network create takelage_and_action
-          docker run --detach \
+          docker run --detach -t \
             --env TAKELAGE_PROJECT_BASE_DIR=/home/runner/work/and_action/and_action \
             --env TZ=Europe/Berlin \
             --hostname takelage_and_action --name takelage_and_action --network takelage_and_action \
