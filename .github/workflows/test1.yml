@@ -29,4 +29,10 @@ jobs:
       - name: Run a multi-line script
         run: |
           ls -ls
+          pwd
+          docker run -d --restart always --name tagelage-dev \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v /tmp/github-runner-your-repo:/tmp/github-runner-your-repo \
+          takelage/takelage:latest
           docker ps
+          
