@@ -2,13 +2,13 @@
 
 name: install tau
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -25,24 +25,26 @@ jobs:
       - name: setup prequisites
         run: |
           sudo apt-get install socat
-          
+
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1.61.1
         with:
           ruby-version: 2.7
-  
+
       - name: install tau
         run: gem install takelage
-          
+
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
       - name: pull takelage image
         run: tau update -l debug
-        
+
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
+        shell: 'script -q -e -c "bash {0}"'
         run: |
+          perl -E 'say "Is STDOUT a TTY?: ", -t STDOUT ? "yes" : "no"'
           docker network create takelage_and_action
           docker run --detach \
             --env TAKELAGE_PROJECT_BASE_DIR=/home/runner/work/and_action/and_action \
@@ -54,13 +56,11 @@ jobs:
             --volume $GITHUB_WORKSPACE:/project --workdir /project \
             --add-host host.docker.internal:172.17.0.1 \
             --env GOOGLE_APPLICATION_CREDENTIALS=/hostdir/.google/default.json \
-            takelage/takelage:latest /entrypoint.py --gid 116 --home /home/runner --uid 1001 --username runner --gpg_agent_port 17874 --gpg_ssh_agent_port 17875 --extra=.config/gcloud 
-          
+            takelage/takelage:latest /entrypoint.py --gid 116 --home /home/runner --uid 1001 --username runner --gpg_agent_port 17874 --gpg_ssh_agent_port 17875 --extra=.config/gcloud
+
       - name: check things
         run: |
           printenv
           docker exec -i takelage_and_action pwd
           docker exec -i takelage_and_action ls -ls
           docker exec -i takelage_and_action ps -ef
-          
-        
