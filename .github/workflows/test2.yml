@@ -43,9 +43,23 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          tau login -l debug
-          ps -ef
+          docker run --detach \
+            --env TAKELAGE_PROJECT_BASE_DIR=/home/runner/work/and_action/and_action \
+            --env TZ=Europe/Berlin \
+            --hostname takelage_and_action --name takelage_and_action --network takelage_and_action \
+            --privileged --rm --shm-size 512M \
+            --volume /var/run/docker.sock:/var/run/docker.sock \
+            --volume /home/runner:/hostdir \
+            --volume $GITHUB_WORKSPACE:/project --workdir /project \
+            --add-host host.docker.internal:172.17.0.1 \
+            --env GOOGLE_APPLICATION_CREDENTIALS=/hostdir/.google/default.json \
+            takelage/takelage:latest /entrypoint.py --gid 116 --home /home/runner --uid 1001 --username runner --gpg_agent_port 17874 --gpg_ssh_agent_port 17875 --extra=.config/gcloud 
           
-      - name: check docker
-        run: docker ps
+      - name: check things
+        run: |
+          printenv
+          docker exec -i takelage_and_action pwd
+          docker exec -i takelage_and_action ls -ls
+          docker exec -i takelage_and_action ps -ef
+          
         
