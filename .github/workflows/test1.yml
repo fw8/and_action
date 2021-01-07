@@ -40,5 +40,5 @@ jobs:
           docker ps
           
       - name: Enter takelage container
-        run: docker exec -it tagelage-dev ps
+        run: docker exec -i tagelage-dev ps
         
