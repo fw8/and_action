@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: test workflow
 
 # Controls when the action will run. 
 on:
@@ -25,6 +25,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: pull takelage image
+        run: docker pull takelage/takelage:latest
+        
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
@@ -32,7 +35,10 @@ jobs:
           pwd
           docker run -d --restart always --name tagelage-dev \
           -v /var/run/docker.sock:/var/run/docker.sock \
-          -v /tmp/github-runner-your-repo:/tmp/github-runner-your-repo \
+          -v $GITHUB_WORKSPACE:/project \
           takelage/takelage:latest
           docker ps
           
+      - name: Enter takelage container
+        run: docker exec -it tagelage-dev ps
+        
