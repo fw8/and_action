@@ -43,6 +43,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
+          docker network create takelage_and_action
           docker run --detach \
             --env TAKELAGE_PROJECT_BASE_DIR=/home/runner/work/and_action/and_action \
             --env TZ=Europe/Berlin \
