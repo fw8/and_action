@@ -24,8 +24,8 @@ jobs:
     steps:
       - name: setup prequisites
         run: |
-          apt install socat
-          apt install gnupg
+          apt-get install socat
+          apt-get install gnupg
           \curl -sSL https://get.rvm.io | bash -s stable --ruby
           gem install takelage
           
