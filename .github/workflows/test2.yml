@@ -25,7 +25,14 @@ jobs:
       - name: setup prequisites
         run: |
           sudo apt-get install socat
-          sudo gem install takelage
+          
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1.45.0
+        with:
+          ruby-version: 2.7.1
+  
+      - name: install tau
+        run: gem install takelage
           
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
